@@ -1,17 +1,17 @@
 {
-  "name": "@alleyway/add-tradingview-alerts-tool",
+  "name": "@minhphuc429/add-tradingview-alerts-tool",
   "repository": {
     "type": "git",
-    "url": "git@github.com:alleyway/add-tradingview-alerts-tool.git"
+    "url": "git+ssh://git@github.com/minhphuc429/add-tradingview-alerts-tool.git"
   },
   "bugs": {
-    "url": "https://github.com/alleyway/add-tradingview-alerts-tool/issues"
+    "url": "https://github.com/minhphuc429/add-tradingview-alerts-tool/issues"
   },
   "description": "Add TradingView Alerts in bulk",
   "type": "module",
   "main": "./dist/index.js",
   "bin": {
-    "atat": "./dist/cli.js"
+    "atat": "dist/cli.js"
   },
   "files": [
     "src",
@@ -28,7 +28,7 @@
     "prepare": "husky install",
     "test": "rm -Rf ./user_data && node --experimental-vm-modules --trace-warnings node_modules/.bin/vitest run",
     "test:ci": "rm -Rf ./user_data && node --experimental-vm-modules --trace-warnings node_modules/.bin/vitest run --coverage.enabled",
-    "test:watch": "node_modules/.bin/vitest --watch"
+    "test:watch": "vitest --watch"
   },
   "keywords": [
     "tradingview",
@@ -38,7 +38,7 @@
   ],
   "author": "Michael Lake",
   "license": "MIT",
-  "version": "3.0.4-beta.0",
+  "version": "3.0.4-ci.97.0",
   "dependencies": {
     "commander": "^11.1.0",
     "consola": "^3.2.3",
