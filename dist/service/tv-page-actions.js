@@ -129,7 +129,7 @@ const clickInputAndDelete = async (page, inputElement) => {
     }, inputElement);
     await waitForTimeout(.3);
 };
-export const launchBrowser = async (headless, url) => {
+export const launchBrowser = async (headless, url, proxyUrl) => {
     const userDataDir = path.join(process.cwd(), "user_data"); // where chrome will store it's stuff
     try {
         accessSync(userDataDir, constants.W_OK);
@@ -154,6 +154,7 @@ export const launchBrowser = async (headless, url) => {
             headless && !url ? "" : `--app=${url}`,
             '--window-size=1920,1080', // otherwise headless doesn't work
             // '--incognito'
+            proxyUrl ? `--proxy-server=${proxyUrl}` : "",
         ]
     });
 };

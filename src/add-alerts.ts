@@ -23,6 +23,7 @@ import kleur from "kleur";
 import {logBaseDelay, styleOverride} from "./service/common-service.js";
 import {InvalidSymbolError} from "./classes.js";
 import {Browser, Page} from "puppeteer";
+import ProxyChain from 'proxy-chain';
 
 const readFilePromise = (filename: string) => {
     return new Promise<any[]>((resolve, reject) => {
@@ -48,6 +49,15 @@ const readFilePromise = (filename: string) => {
             reject(e.message)
         }
     })
+}
+
+const getAnonymizedProxyUrl = async (proxyConfig: any): Promise<string> => {
+    const { host, username, password } = proxyConfig;
+    const originalUrl = `http://${username}:${password}@${host}`;
+    log.info(`Using proxy: ${kleur.yellow(originalUrl)}`);
+    const newProxyUrl = await ProxyChain.anonymizeProxy(originalUrl);
+    log.info(`Anonymized proxy: ${kleur.yellow(newProxyUrl)}`);
+    return newProxyUrl;
 }
 
 export const addAlertsMain = async (configFileName) => {
@@ -130,8 +140,14 @@ export const addAlertsMain = async (configFileName) => {
 
     }
 
+    const url = `${config.tradingview.chartUrl}#signin`
 
-    const browser: Browser = await launchBrowser(headless, `${config.tradingview.chartUrl}#signin`)
+    let proxyUrl: string = "";
+    if (config.proxy.enabled) {
+        proxyUrl = await getAnonymizedProxyUrl(config.proxy);
+    }
+
+    const browser: Browser = await launchBrowser(headless, url, proxyUrl);
 
     let page: Page;
     let accessDenied;
@@ -293,6 +309,9 @@ export const addAlertsMain = async (configFileName) => {
             if (e instanceof InvalidSymbolError) {
                 e.symbol = row.symbol
                 await browser.close()
+                if (config.proxy.enabled) {
+                    await ProxyChain.closeAnonymizedProxy(proxyUrl, true);
+                }
                 throw e
             }
         }
@@ -301,4 +320,7 @@ export const addAlertsMain = async (configFileName) => {
 
     await waitForTimeout(5, "waiting a little before closing")
     await browser.close()
+    if (config.proxy.enabled) {
+        await ProxyChain.closeAnonymizedProxy(proxyUrl, true);
+    }
 }

@@ -58,12 +58,12 @@ export const styleOverride =  `
                 display: none !important;
                 z-index: -1 !important;
             }
-            
+
             div:has(> div[data-qa-dialog-name="alert-fired"]) {
                 display: none;
             }
-            
+
             div:has(> div[data-qa-dialog-name="alerts-fired"]) {
                 display: none;
-            }        
+            }
         `;

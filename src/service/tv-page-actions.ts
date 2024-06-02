@@ -173,7 +173,7 @@ const clickInputAndDelete = async (page, inputElement) => {
     await waitForTimeout(.3)
 }
 
-export const launchBrowser = async (headless: boolean, url?: string): Promise<Browser> => {
+export const launchBrowser = async (headless: boolean, url?: string, proxyUrl?: string): Promise<Browser> => {
 
     const userDataDir = path.join(process.cwd(), "user_data") // where chrome will store it's stuff
 
@@ -200,6 +200,7 @@ export const launchBrowser = async (headless: boolean, url?: string): Promise<Br
             headless && !url ? "" : `--app=${url}`,
             '--window-size=1920,1080', // otherwise headless doesn't work
             // '--incognito'
+            proxyUrl ? `--proxy-server=${proxyUrl}` : "",
         ]
     })
 }
